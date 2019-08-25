@@ -1,0 +1,15 @@
+from rest_framework import serializers
+from sreps.core.models import Customer
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = (
+            'id',
+            'name',
+            'email',
+            'phone',
+            'address',
+            'datetime_created',
+        )
