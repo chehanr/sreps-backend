@@ -17,7 +17,7 @@ urlpatterns = [
 
 router = DefaultRouter()
 router.register(r'user', UserViewSet, base_name='user')
-router.register(r'cutomer', CustomerViewSet, base_name='customer')
+router.register(r'customer', CustomerViewSet, base_name='customer')
 router.register(r'product', ProductViewSet, base_name='product')
 router.register(r'product-category', ProductCategoryViewSet, base_name='product-category')
 router.register(r'sale', SaleViewSet, base_name='sale')
