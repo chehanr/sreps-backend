@@ -22,9 +22,11 @@ class ProductCategoryViewSet(
     )
     search_fields = ('name',)
     ordering_fields = (
+        'id',
+        'name',
         'datetime_created',
     )
-    ordering = ('name',)
+    ordering = ('id',)
     permission_classes_by_action = {
         'create': [IsAdminUser],
         'update': [IsAdminUser],

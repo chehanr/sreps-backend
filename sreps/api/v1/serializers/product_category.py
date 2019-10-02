@@ -8,6 +8,7 @@ class ProductCategorySerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+            'datetime_created',
         )
 
 
