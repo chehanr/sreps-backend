@@ -9,7 +9,6 @@ class SaleViewSet(
         mixins.ListModelMixin,
         mixins.RetrieveModelMixin,
         mixins.CreateModelMixin,
-        mixins.UpdateModelMixin,
         mixins.DestroyModelMixin,
         viewsets.GenericViewSet,):
 
