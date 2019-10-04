@@ -213,6 +213,9 @@ class Sale(BaseModel):
         default=1,
         validators=[MinValueValidator(1)]
     )
+    datetime_created = models.DateTimeField(
+        auto_now_add=True
+    )
 
     class Meta:
         verbose_name = _("Sale")
