@@ -15,4 +15,5 @@ class SaleSerializer(serializers.ModelSerializer):
             'invoice',
             'product',
             'quantity',
+            'datetime_created',
         )
