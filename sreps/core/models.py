@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -176,7 +177,9 @@ class Sale(models.Model):
 
     invoice = models.ForeignKey(
         Invoice,
-        on_delete=models.CASCADE
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
     )
     product = models.ForeignKey(
         Product,
@@ -184,12 +187,39 @@ class Sale(models.Model):
         null=True
     )
     quantity = models.PositiveSmallIntegerField(
-        default=0
+        default=1,
+        validators=[MinValueValidator(1)]
     )
 
     class Meta:
         verbose_name = _("Sale")
         verbose_name_plural = _("Sales")
+
+    def clean(self, *args, **kwargs):
+        if self.product.stock_quantity < self.quantity:
+            error_msg = 'Available stock ({}) less than required quantity ({}).'.format(
+                self.product.stock_quantity, self.quantity)
+
+            raise ValidationError(error_msg)
+        
+        super(Sale, self).clean(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        if self.pk == None:
+            #  Deduct the `product` stock quantity with the required quantity. 
+            # `Self.pk == None` ensures that the object never gets updated.
+            # TODO: Disable update links on Admin panel. 
+            self.product.stock_quantity -= self.quantity
+            self.product.save()
+
+            super(Sale, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        #  Add back the `product` stock quantity.
+        self.product.stock_quantity += self.quantity
+        self.product.save()
+
+        super(Sale, self).delete(*args, **kwargs)
 
     def __str__(self):
         if self.product:
