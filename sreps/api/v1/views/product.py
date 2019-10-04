@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
@@ -19,19 +20,25 @@ class ProductViewSet(
     filter_backends = (
         filters.SearchFilter,
         filters.OrderingFilter,
+        DjangoFilterBackend,
     )
     search_fields = ('name',)
+    ordering = ('-id',)
     ordering_fields = (
         'id',
         'name',
+        'category__id',
+        'category__name',
         'stock_quantity',
         'base_price',
         'discount_amount',
         'is_available',
         'datetime_created',
-        'category',
     )
-    ordering = ('-id',)
+    filterset_fields = (
+        'category__id',
+        'is_available',
+    )
     permission_classes_by_action = {
         'create': [IsAdminUser],
         'update': [IsAdminUser],
