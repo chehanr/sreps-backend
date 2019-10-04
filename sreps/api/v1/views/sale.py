@@ -29,8 +29,7 @@ class SaleViewSet(
         'product__id',
         'product__name',
         'quantity',
-        # TODO: add `datetime_created` field.
-        # 'datetime_created',
+        'datetime_created',
     )
     filterset_fields = (
         'invoice__id',
