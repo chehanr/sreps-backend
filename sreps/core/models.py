@@ -4,10 +4,33 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
+from sreps.core.managers import DefaultManager
 
-class Customer(models.Model):
+class BaseModel(models.Model):
+    class Meta:
+        abstract = True
+
+    deleted_datetime = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+
+    objects = DefaultManager()
+    original_objects = models.Manager()
+
+    def delete(self):
+        self.deleted_datetime = timezone.now()
+        self.save()
+
+    def undelete(self):
+        self.deleted_datetime = None
+        self.save()
+
+
+class Customer(BaseModel):
     """
     Customer model.
     """
@@ -45,7 +68,7 @@ class Customer(models.Model):
         return self.pk
 
 
-class Invoice(models.Model):
+class Invoice(BaseModel):
     """
     Invoice model.
     """
@@ -98,7 +121,7 @@ class Invoice(models.Model):
         return self.pk
 
 
-class ProductCategory(models.Model):
+class ProductCategory(BaseModel):
     """
     ProductCategory model.
     """
@@ -122,7 +145,7 @@ class ProductCategory(models.Model):
         return self.name
 
 
-class Product(models.Model):
+class Product(BaseModel):
     """
     Product model.
     """
@@ -170,7 +193,7 @@ class Product(models.Model):
         return f'{self.pk}, {self.name}'
 
 
-class Sale(models.Model):
+class Sale(BaseModel):
     """
     Sale model.
     """
