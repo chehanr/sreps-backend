@@ -30,6 +30,7 @@ class ProductViewSet(
         'category__id',
         'category__name',
         'stock_quantity',
+        'low_stock_threshold',
         'base_price',
         'discount_amount',
         'is_available',
