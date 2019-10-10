@@ -166,6 +166,9 @@ class Product(BaseModel):
     stock_quantity = models.PositiveSmallIntegerField(
         default=0
     )
+    low_stock_threshold = models.PositiveSmallIntegerField(
+        default=0
+    )
     base_price = models.FloatField(
         default=0,
         validators=[MinValueValidator(0.0)]
