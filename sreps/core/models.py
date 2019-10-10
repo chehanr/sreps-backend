@@ -241,7 +241,7 @@ class Sale(BaseModel):
             self.product.stock_quantity -= self.quantity
             self.product.save()
 
-            super(Sale, self).save(*args, **kwargs)
+        super(Sale, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         #  Add back the `product` stock quantity.

@@ -2,7 +2,7 @@ from rest_framework import filters, mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from sreps.api.v1.serializers.customer import CustomerSerializer
-from sreps.api.v1.serializers.invoice import InvoiceSerializer
+from sreps.api.v1.serializers.invoice import InvoiceListSerializer
 from sreps.core.models import Customer, Invoice
 
 
@@ -26,6 +26,6 @@ class CustomerViewSet(
 
         invoices = Invoice.objects.filter(
             customer=customer).order_by('-datetime_created')
-        serializer = InvoiceSerializer(invoices, many=True)
+        serializer = InvoiceListSerializer(invoices, many=True)
 
         return Response(serializer.data)
