@@ -5,7 +5,7 @@ from rest_framework import exceptions, filters, mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from sreps.api.v1.serializers.invoice import InvoiceSerializer
+from sreps.api.v1.serializers.invoice import InvoiceListSerializer
 from sreps.api.v1.serializers.user import UserSerializer
 from sreps.core.models import Invoice
 
@@ -42,6 +42,6 @@ class UserViewSet(mixins.RetrieveModelMixin,
 
         invoices = Invoice.objects.filter(
             salesperson=user).order_by('-datetime_created')
-        serializer = InvoiceSerializer(invoices, many=True)
+        serializer = InvoiceListSerializer(invoices, many=True)
 
         return Response(serializer.data)
