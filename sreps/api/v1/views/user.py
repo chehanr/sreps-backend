@@ -3,36 +3,46 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import exceptions, filters, mixins, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from sreps.api.v1.serializers.invoice import InvoiceListSerializer
-from sreps.api.v1.serializers.user import UserSerializer
+from sreps.api.v1.serializers.user import UserSerializer, UserListSerializer, UserDetailSerializer
 from sreps.core.models import Invoice
 
 
-class UserViewSet(mixins.RetrieveModelMixin,
-                  viewsets.GenericViewSet,):
+class UserViewSet(
+        mixins.ListModelMixin,
+        mixins.RetrieveModelMixin,
+        viewsets.GenericViewSet,):
 
     queryset = get_user_model().objects.all()
+    permission_classes = (IsAdminUser,)
     serializer_class = UserSerializer
+    filter_backends = (
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    )
+    search_fields = ('username',)
+    ordering = ('-id',)
+    ordering_fields = (
+        'id',
+        'username',
+        'date_joined',
+        'last_login',
+    )
+    filterset_fields = (
+        'is_active',
+        'is_staff',
+        'is_superuser',
+    )
 
-    def get_throttles(self):
-        if self.action == 'create':
-            self.throttle_scope = 'user.create'
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return UserListSerializer
+        if self.action == 'retrieve':
+            return UserDetailSerializer
 
-        return super().get_throttles()
-
-    def list(self, request):
-        queryset = get_user_model().objects.all()
-        serializer = UserSerializer(queryset, many=True)
-
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        user = get_object_or_404(self.queryset, pk=pk)
-        serializer = UserSerializer(user)
-
-        return Response(serializer.data)
+        return UserSerializer
 
     @action(detail=True, methods=['GET'], name='Salesperson invoices')
     def invoices(self, request, pk=None):

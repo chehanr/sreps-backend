@@ -3,19 +3,57 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 
+class UserListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = (
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'date_joined',
+            'last_login',
+            'is_active',
+            'is_staff',
+            'is_superuser',
+        )
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = (
             'id',
             'username',
+            'first_name',
+            'last_name',
             'email',
+            'date_joined',
+            'last_login',
+            'is_active',
+            'is_staff',
+            'is_superuser',
+        )
+
+
+class UserCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = (
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'date_joined',
+            'last_login',
+            'is_active',
+            'is_staff',
+            'is_superuser',
             'password',
         )
         extra_kwargs = {
-            'email': {
-                'write_only': True
-            },
             'password': {
                 'write_only': True
             }
@@ -35,7 +73,14 @@ class UserDetailSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'username',
+            'first_name',
+            'last_name',
             'email',
+            'date_joined',
+            'last_login',
+            'is_active',
+            'is_staff',
+            'is_superuser',
         )
 
 
@@ -45,6 +90,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'username',
+            'first_name',
+            'last_name',
             'email',
         )
         extra_kwargs = {
