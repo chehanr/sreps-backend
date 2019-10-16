@@ -24,7 +24,7 @@ class InvoiceViewSet(
         DjangoFilterBackend,
     )
     search_fields = (
-        'salesperson__name',
+        'salesperson__username',
         'customer__name',
     )
     ordering = ('-id',)
